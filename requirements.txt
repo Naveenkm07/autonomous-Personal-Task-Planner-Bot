@@ -1,8 +1,5 @@
 # Core Python Dependencies
-asyncio
 json5>=0.9.6
-logging
-sqlite3
 
 # AI and Machine Learning
 google-generativeai>=0.3.0
@@ -23,7 +20,6 @@ pyowm>=3.3.0
 
 # Telegram Bot
 python-telegram-bot>=20.0
-requests>=2.25.0
 
 # Task Scheduling
 python-crontab>=2.6.0
