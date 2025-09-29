@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Planner Bot Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-color-scheme="dark">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h1>Task Planner Bot</h1>
+        </div>
+        <div class="navbar-nav">
+            <button class="nav-btn active" data-view="overview">Overview</button>
+            <button class="nav-btn" data-view="agents">Agents</button>
+            <button class="nav-btn" data-view="tasks">Tasks</button>
+            <button class="nav-btn" data-view="analytics">Analytics</button>
+            <button class="nav-btn" data-view="config">Settings</button>
+            <button class="nav-btn" data-view="logs">Logs</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- System Overview -->
+        <div id="overview" class="view active">
+            <div class="dashboard-header">
+                <h2>System Overview</h2>
+                <div class="system-status">
+                    <div class="status status--success">System Online</div>
+                    <div class="uptime">Uptime: <span id="uptime">15 days, 7 hours, 23 minutes</span></div>
+                </div>
+            </div>
+            
+            <!-- Agent Status Cards -->
+            <div class="agent-grid">
+                <div class="agent-card" data-agent="wf1">
+                    <div class="agent-header">
+                        <h3>Collector Agent</h3>
+                        <div class="status status--success">Active</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Success Rate</span>
+                            <span class="metric-value">98.5%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Avg Execution</span>
+                            <span class="metric-value">12.3s</span>
+                        </div>
+                    </div>
+                    <div class="agent-schedule">
+                        <span class="schedule-label">Schedule:</span>
+                        <span class="schedule-value">Every 15 minutes</span>
+                    </div>
+                    <button class="btn btn--sm btn--outline trigger-btn" data-agent="wf1">Trigger Now</button>
+                </div>
+
+                <div class="agent-card" data-agent="wf2">
+                    <div class="agent-header">
+                        <h3>Planner Agent</h3>
+                        <div class="status status--success">Active</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Success Rate</span>
+                            <span class="metric-value">95.2%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Avg Execution</span>
+                            <span class="metric-value">8.7s</span>
+                        </div>
+                    </div>
+                    <div class="agent-schedule">
+                        <span class="schedule-label">Schedule:</span>
+                        <span class="schedule-value">On demand</span>
+                    </div>
+                    <button class="btn btn--sm btn--outline trigger-btn" data-agent="wf2">Trigger Now</button>
+                </div>
+
+                <div class="agent-card" data-agent="wf3">
+                    <div class="agent-header">
+                        <h3>Executor Agent</h3>
+                        <div class="status status--success">Active</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Success Rate</span>
+                            <span class="metric-value">97.1%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Avg Execution</span>
+                            <span class="metric-value">6.2s</span>
+                        </div>
+                    </div>
+                    <div class="agent-schedule">
+                        <span class="schedule-label">Schedule:</span>
+                        <span class="schedule-value">On demand</span>
+                    </div>
+                    <button class="btn btn--sm btn--outline trigger-btn" data-agent="wf3">Trigger Now</button>
+                </div>
+
+                <div class="agent-card" data-agent="wf4">
+                    <div class="agent-header">
+                        <h3>Reviewer & Learner Agent</h3>
+                        <div class="status status--warning">Scheduled</div>
+                    </div>
+                    <div class="agent-metrics">
+                        <div class="metric">
+                            <span class="metric-label">Success Rate</span>
+                            <span class="metric-value">100%</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-label">Avg Execution</span>
+                            <span class="metric-value">45.8s</span>
+                        </div>
+                    </div>
+                    <div class="agent-schedule">
+                        <span class="schedule-label">Schedule:</span>
+                        <span class="schedule-value">Daily at 10 PM</span>
+                    </div>
+                    <button class="btn btn--sm btn--outline trigger-btn" data-agent="wf4">Trigger Now</button>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div class="activity-list" id="activityList">
+                    <!-- Activity items will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Management -->
+        <div id="agents" class="view">
+            <div class="dashboard-header">
+                <h2>Agent Management</h2>
+            </div>
+            
+            <div class="agent-details">
+                <div class="agent-selector">
+                    <label class="form-label">Select Agent</label>
+                    <select class="form-control" id="agentSelector">
+                        <option value="wf1">Collector Agent (WF1)</option>
+                        <option value="wf2">Planner Agent (WF2)</option>
+                        <option value="wf3">Executor Agent (WF3)</option>
+                        <option value="wf4">Reviewer & Learner Agent (WF4)</option>
+                    </select>
+                </div>
+
+                <div class="agent-detail-card card">
+                    <div class="card__body">
+                        <div class="agent-info" id="agentInfo">
+                            <!-- Agent details will be populated by JavaScript -->
+                        </div>
+                        <div class="agent-actions">
+                            <button class="btn btn--primary" id="executeAgent">Execute Agent</button>
+                            <button class="btn btn--secondary" id="viewLogs">View Execution Logs</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Management -->
+        <div id="tasks" class="view">
+            <div class="dashboard-header">
+                <h2>Task Management</h2>
+                <button class="btn btn--primary" id="createTaskBtn">Create New Task</button>
+            </div>
+            
+            <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">All Tasks</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="in-progress">In Progress</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+
+            <div class="task-grid" id="taskGrid">
+                <!-- Tasks will be populated by JavaScript -->
+            </div>
+
+            <!-- Task Modal -->
+            <div class="modal hidden" id="taskModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modalTitle">Create New Task</h3>
+                        <button class="modal-close" id="closeModal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="taskTitle" placeholder="Task title">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="taskDescription" rows="3" placeholder="Task description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select class="form-control" id="taskPriority">
+                                <option value="1">High</option>
+                                <option value="2">Medium</option>
+                                <option value="3">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Deadline</label>
+                            <input type="datetime-local" class="form-control" id="taskDeadline">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn--secondary" id="cancelTask">Cancel</button>
+                        <button class="btn btn--primary" id="saveTask">Save Task</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div id="analytics" class="view">
+            <div class="dashboard-header">
+                <h2>Analytics Dashboard</h2>
+            </div>
+            
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <h3>Execution Times</h3>
+                    <div class="chart-wrapper" style="position: relative; height: 300px;">
+                        <canvas id="executionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Success Rates</h3>
+                    <div class="chart-wrapper" style="position: relative; height: 300px;">
+                        <canvas id="successChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Total Executions</h4>
+                        <div class="stat-value">1,247</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Success Rate</h4>
+                        <div class="stat-value">97.1%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Avg Response Time</h4>
+                        <div class="stat-value">15.7s</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>API Calls Today</h4>
+                        <div class="stat-value">2,405</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration -->
+        <div id="config" class="view">
+            <div class="dashboard-header">
+                <h2>System Configuration</h2>
+            </div>
+            
+            <div class="config-sections">
+                <div class="config-section card">
+                    <div class="card__header">
+                        <h3>API Configuration</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label">Google Gemini API Key</label>
+                            <input type="password" class="form-control" placeholder="••••••••••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notion API Token</label>
+                            <input type="password" class="form-control" placeholder="••••••••••••••••">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telegram Bot Token</label>
+                            <input type="password" class="form-control" placeholder="••••••••••••••••">
+                        </div>
+                        <button class="btn btn--primary">Update API Keys</button>
+                    </div>
+                </div>
+
+                <div class="config-section card">
+                    <div class="card__header">
+                        <h3>Schedule Configuration</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label">Collector Agent Schedule</label>
+                            <input type="text" class="form-control" value="*/15 * * * *">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Reviewer Agent Schedule</label>
+                            <input type="text" class="form-control" value="0 22 * * *">
+                        </div>
+                        <button class="btn btn--primary">Update Schedules</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring and Logs -->
+        <div id="logs" class="view">
+            <div class="dashboard-header">
+                <h2>System Logs & Monitoring</h2>
+                <div class="log-controls">
+                    <button class="btn btn--secondary" id="clearLogs">Clear Logs</button>
+                    <button class="btn btn--outline" id="exportLogs">Export</button>
+                </div>
+            </div>
+            
+            <div class="log-container">
+                <div class="log-viewer" id="logViewer">
+                    <!-- Logs will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

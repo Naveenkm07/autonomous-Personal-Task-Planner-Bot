@@ -1,0 +1,87 @@
+{
+  "project_name": "Autonomous Personal Task Planner Bot",
+  "architecture_type": "Multi-Agent System (MAS)",
+  "agents": [
+    {
+      "name": "WF4 - Reviewer & Learner Agent",
+      "trigger": "Cron job - Daily at 10 PM",
+      "functions": [
+        "Read and analyze completed tasks from calendar history",
+        "Use AI (Gemini) to analyze performance patterns",
+        "Generate intelligent rules and insights",
+        "Store refined rules in Notion database",
+        "Provide performance feedback and optimization"
+      ],
+      "technologies": [
+        "Google Gemini API",
+        "Google Calendar API",
+        "Notion API",
+        "Python crontab"
+      ]
+    },
+    {
+      "name": "WF1 - Collector Agent",
+      "trigger": "Cron job - Every 15 minutes",
+      "functions": [
+        "Monitor Google Calendar for new events",
+        "Fetch weather data from OpenWeatherMap API",
+        "Read existing tasks from Notion database",
+        "Use AI (Gemini) to parse and structure data",
+        "Provide clean data feed to Planner Agent"
+      ],
+      "technologies": [
+        "Google Calendar API",
+        "OpenWeatherMap API",
+        "Notion API",
+        "Google Gemini API"
+      ]
+    },
+    {
+      "name": "WF2 - Planner Agent (The Brain)",
+      "trigger": "Receives data from Collector Agent",
+      "functions": [
+        "Draft intelligent daily/weekly plans",
+        "Implement conflict detection algorithm",
+        "Use AI for re-planning and conflict resolution",
+        "Approve final optimized plans",
+        "Adaptive decision-making based on learned rules"
+      ],
+      "technologies": [
+        "Google Gemini API",
+        "Notion API",
+        "Python algorithms"
+      ]
+    },
+    {
+      "name": "WF3 - Executor Agent",
+      "trigger": "Receives approved plans from Planner",
+      "functions": [
+        "Create/update Google Calendar events",
+        "Update task status in Notion database",
+        "Send plan summaries via Telegram bot",
+        "Handle real-time notifications and reminders"
+      ],
+      "technologies": [
+        "Google Calendar API",
+        "Notion API",
+        "Telegram Bot API"
+      ]
+    }
+  ],
+  "core_technologies": [
+    "Google Gemini API - AI processing and decision making",
+    "Google Calendar API - Event management",
+    "Notion API - Task and rule storage",
+    "OpenWeatherMap API - Weather-based planning",
+    "Telegram Bot API - Notifications and alerts",
+    "Python crontab - Job scheduling",
+    "JSON/SQLite - Local caching"
+  ],
+  "autonomous_features": [
+    "Self-learning from user behavior patterns",
+    "Automatic conflict resolution",
+    "Weather-adaptive scheduling",
+    "Priority-based task organization",
+    "Continuous performance optimization"
+  ]
+}

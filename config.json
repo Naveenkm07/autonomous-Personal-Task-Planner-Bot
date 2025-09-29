@@ -1,0 +1,74 @@
+{
+  "environment": {
+    "development": {
+      "google_calendar_api": "development_credentials",
+      "notion_api": "dev_token",
+      "openweather_api": "dev_key",
+      "telegram_bot_api": "dev_bot_token",
+      "gemini_api": "dev_gemini_key"
+    },
+    "production": {
+      "google_calendar_api": "production_credentials",
+      "notion_api": "prod_token",
+      "openweather_api": "prod_key",
+      "telegram_bot_api": "prod_bot_token",
+      "gemini_api": "prod_gemini_key"
+    }
+  },
+  "agent_settings": {
+    "collector_agent": {
+      "schedule": "*/15 * * * *",
+      "max_retries": 3,
+      "timeout": 30,
+      "batch_size": 10
+    },
+    "reviewer_agent": {
+      "schedule": "0 22 * * *",
+      "analysis_depth": "detailed",
+      "learning_rate": 0.1,
+      "pattern_threshold": 0.8
+    },
+    "planner_agent": {
+      "conflict_detection": true,
+      "weather_integration": true,
+      "priority_weights": {
+        "deadline": 0.4,
+        "importance": 0.3,
+        "duration": 0.2,
+        "user_preference": 0.1
+      }
+    },
+    "executor_agent": {
+      "notification_channels": [
+        "telegram",
+        "calendar"
+      ],
+      "retry_failed_tasks": true,
+      "batch_execution": true
+    }
+  },
+  "system_limits": {
+    "api_rate_limits": {
+      "google_calendar": {
+        "requests_per_minute": 100
+      },
+      "notion": {
+        "requests_per_minute": 120
+      },
+      "openweather": {
+        "requests_per_minute": 60
+      },
+      "telegram": {
+        "requests_per_minute": 30
+      },
+      "gemini": {
+        "requests_per_minute": 300
+      }
+    },
+    "data_retention": {
+      "logs": "30 days",
+      "cache": "7 days",
+      "analytics": "365 days"
+    }
+  }
+}

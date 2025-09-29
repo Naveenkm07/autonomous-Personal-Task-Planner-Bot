@@ -1,0 +1,136 @@
+
+version: '3.8'
+
+services:
+  # Main Task Planner System
+  task-planner:
+    build: .
+    container_name: autonomous-task-planner
+    restart: unless-stopped
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_CALENDAR_CREDENTIALS=${GOOGLE_CALENDAR_CREDENTIALS}
+      - NOTION_API_TOKEN=${NOTION_API_TOKEN}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - ENVIRONMENT=production
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./cache:/app/cache
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - planner-network
+
+  # Collector Agent (runs every 15 minutes)
+  collector-agent:
+    build: .
+    container_name: collector-agent
+    restart: unless-stopped
+    command: ["python", "autonomous_task_planner.py", "--agent", "collector"]
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_CALENDAR_CREDENTIALS=${GOOGLE_CALENDAR_CREDENTIALS}
+      - NOTION_API_TOKEN=${NOTION_API_TOKEN}
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY}
+      - AGENT_TYPE=collector
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - task-planner
+    networks:
+      - planner-network
+
+  # Reviewer Agent (runs daily at 10 PM)
+  reviewer-agent:
+    build: .
+    container_name: reviewer-agent
+    restart: unless-stopped
+    command: ["python", "autonomous_task_planner.py", "--agent", "reviewer"]
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_CALENDAR_CREDENTIALS=${GOOGLE_CALENDAR_CREDENTIALS}
+      - NOTION_API_TOKEN=${NOTION_API_TOKEN}
+      - AGENT_TYPE=reviewer
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    depends_on:
+      - task-planner
+    networks:
+      - planner-network
+
+  # Redis for caching and message queuing
+  redis:
+    image: redis:7-alpine
+    container_name: task-planner-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - planner-network
+
+  # PostgreSQL for persistent data storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: task-planner-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=task_planner
+      - POSTGRES_USER=planner_user
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - planner-network
+
+  # Monitoring and Logging
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: task-planner-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - planner-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: task-planner-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - planner-network
+
+volumes:
+  redis-data:
+  postgres-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  planner-network:
+    driver: bridge
