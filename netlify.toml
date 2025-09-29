@@ -1,7 +1,23 @@
 [build]
-  # Static site - no build process needed
+  # Override UI settings - static site deployment
+  command = "echo 'Deploying static site - no build required'"
   publish = "."
   
 [build.environment]
   # Prevent framework detection
   NETLIFY_SKIP_FRAMEWORK_DETECTION = "true"
+  # Disable Hugo completely
+  HUGO_VERSION = ""
+
+# Force override of any UI settings
+[context.production]
+  command = "echo 'Static site deployment'"
+  publish = "."
+
+[context.deploy-preview]
+  command = "echo 'Static site deployment'"
+  publish = "."
+
+[context.branch-deploy]
+  command = "echo 'Static site deployment'"
+  publish = "."
